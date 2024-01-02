@@ -1,7 +1,20 @@
 import { StarOutline } from "@mui/icons-material"
 import { Grid, Typography } from "@mui/material"
+import { useEffect } from "react"
+import { useSelector } from "react-redux"
+import Swal from "sweetalert2"
+import 'sweetalert2/dist/sweetalert2.css'
 
 export const NothingSelectedView = () => {
+
+  const { messageSaved } = useSelector( state => state.journal );
+
+  useEffect(() => {
+    if( messageSaved.length > 0 ){
+        Swal.fire('Nota eliminada', messageSaved, 'success')
+    }
+  }, [messageSaved]);
+  
   return (
     
     <Grid

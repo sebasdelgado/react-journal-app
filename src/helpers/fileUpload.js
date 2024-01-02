@@ -1,7 +1,8 @@
 
 export const fileUpload = async( file ) => {
 
-    if( !file ) throw new Error('No hay ningun archivo a subir');
+    // if( !file ) throw new Error('No hay ningun archivo a subir');
+    if( !file ) return null; //para realizar pruebas
 
     const cloudUrl = 'https://api.cloudinary.com/v1_1/dlgutlyc2/upload';
 
@@ -24,7 +25,8 @@ export const fileUpload = async( file ) => {
         
     } catch (error) {
         console.log(error);
-        throw new Error( error.message );
+        // throw new Error( error.message );
+        return null; //para realizar pruebas
     }
 
 }

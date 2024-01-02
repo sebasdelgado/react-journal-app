@@ -8,7 +8,14 @@ export const journalSlice = createSlice({
     isSaving: false,
     messageSaved: '',
     notes: [],
-    active: null
+    active: null,
+    // active : {
+    //   id : 'ABC123',
+    //   title : '',
+    //   body : '',
+    //   date : 1234567,
+    //   imageUrls : [] //https://foto1.jpg, https://foto2.jpg
+    // }
   },
 
   //Todo lo que va en los reducers es trabajo sincrono, no puede haber funciones asincronas 
@@ -71,10 +78,7 @@ export const journalSlice = createSlice({
 
       state.notes = state.notes.filter( note => note.id !== action.payload );
 
-      //TODO: hacer la alerta de borrado
-      //TODO: arrglar el bug del agregado de la nota cuando este en un nota que existe
-      // state.messageSaved = `${ action.payload.title }, borrada correctamente`;
-      //TODO: agregar comentario de como se estructura la nota activa en el sliceJournal
+      state.messageSaved = `${ action.payload.title }, eliminada correctamente`;
     },
 
   },

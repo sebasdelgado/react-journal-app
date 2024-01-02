@@ -1,5 +1,5 @@
 import { Link as RouterLink } from "react-router-dom";
-import { Google } from "@mui/icons-material";
+import Google from "@mui/icons-material/Google";
 import { Button, Grid, TextField, Typography, Link, Alert } from "@mui/material";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
@@ -53,7 +53,9 @@ export const LoginPage = () => {
   return (
     
     <AuthLayout title="Login">
-      <form onSubmit={ onSubmit }
+      <form 
+        aria-label="submit-form"
+        onSubmit={ onSubmit }
         className="animate__animated animate__fadeIn animate__faster"
       >
         <Grid container>
@@ -79,6 +81,9 @@ export const LoginPage = () => {
               placeholder="Contraseña"
               fullWidth
               name="password"
+              inputProps={{
+                'data-testid' : 'password'
+              }}
               value={ password }
               onChange={ onInputChange }
               error = { !!passwordValid && formSubmitted }
@@ -112,6 +117,7 @@ export const LoginPage = () => {
                 disabled = { isAuthenticating }
                 variant="contained" 
                 fullWidth
+                aria-label="google-btn"
                 onClick={ onGoogleSignIn }>
                 <Google />
                 <Typography sx={{ ml: 1 }}>Google</Typography>
