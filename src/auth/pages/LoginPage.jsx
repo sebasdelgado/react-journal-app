@@ -70,7 +70,7 @@ export const LoginPage = () => {
               value={ email }
               onChange={ onInputChange }
               error = { !!emailValid && formSubmitted }
-              helperText = { emailValid }
+              helperText = { !!emailValid && formSubmitted ? emailValid : ''}
             />
           </Grid>
 
@@ -87,7 +87,7 @@ export const LoginPage = () => {
               value={ password }
               onChange={ onInputChange }
               error = { !!passwordValid && formSubmitted }
-              helperText = { passwordValid }
+              helperText = { !!passwordValid && formSubmitted ? passwordValid : '' }
             />
           </Grid>
 

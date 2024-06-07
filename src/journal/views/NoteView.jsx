@@ -3,16 +3,28 @@ import { Button, Grid, TextField, Typography, IconButton } from "@mui/material"
 import { ImageGallery } from "../components"
 import { useForm } from "../../hooks"
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { setActiveNote, startDeletingNote, startSaveNote, startUploadingFiles } from "../../store/journal"
 import Swal from "sweetalert2"
 import 'sweetalert2/dist/sweetalert2.css'
 
+const formValidations = {
+    title: [ ( value ) => value.length >= 6, 'Debes escribir un título mayor a 6 carateres'],
+    body: [ ( value ) => value.length >= 6, 'Debes escribir un detalle mayor a 6 carateres']
+}
+
 export const NoteView = () => {
 
+    
+    //Validamos si el formulario se ha enviado para manejar los errores de validacion de formulario
+    const [formSubmitted, setformSubmitted] = useState(false);
+
     const dispatch = useDispatch();
+    
     const { active:note, messageSaved, isSaving } = useSelector( state => state.journal );
-    const { body, title, date, onInputChange, formState } = useForm( note );
+
+    const { body, title, date, onInputChange, formState, isFormValid,
+            titleValid, bodyValid } = useForm( note, formValidations );
 
     const dateString = useMemo( () => {
        const newDate = new Date( date );
@@ -31,7 +43,14 @@ export const NoteView = () => {
         }
     }, [messageSaved])
 
-    const onSaveNote = () => {
+    const onSaveNote = ( event ) => {
+
+        event.preventDefault();
+
+        setformSubmitted(true);
+    
+        if( !isFormValid ) return;
+
         dispatch( startSaveNote() );
     }
 
@@ -98,6 +117,8 @@ export const NoteView = () => {
                 name="title"
                 value={ title }
                 onChange={ onInputChange }
+                error = { !!titleValid && formSubmitted }
+                helperText = { !!titleValid && formSubmitted ? titleValid : '' }
             />
 
             <TextField
@@ -110,6 +131,8 @@ export const NoteView = () => {
                 name="body"
                 value={ body }
                 onChange={ onInputChange }
+                error = { !!bodyValid && formSubmitted }
+                helperText = { !!bodyValid && formSubmitted ?  bodyValid : '' }
             />
         </Grid>
 

@@ -7,25 +7,13 @@ export const startNewNote = () => {
 
     return async( dispatch, getState ) => {
 
-        dispatch( savingNewNote() );
-
-        const { uid } = getState().auth;
-
         const newNote = {
             title : '',
             body : '',
             date : new Date() .getTime(),
         }
 
-        const newDoc = doc( collection( FirebaseDB, `${ uid }/journal/notes` ) );
-        await setDoc( newDoc, newNote );
-
-        newNote.id = newDoc.id;
-
-
-        dispatch( addNewEmptyNote( newNote ) );
         dispatch( setActiveNote( newNote ) );
-        
     }
 }
 
@@ -40,9 +28,23 @@ export const startSaveNote = () => {
         const { active:note } = getState().journal;
 
         const noteToFireStore = { ...note };
-        delete noteToFireStore.id;
+        
+        if ( !note.id ) { //Si no existe id de nota se procede a crearla en firebase
+
+            const newDoc = doc( collection( FirebaseDB, `${ uid }/journal/notes` ) );
+            await setDoc( newDoc, note );
+
+            const newNote = { ...note };
+            newNote.id = newDoc.id;
+            
+            dispatch( addNewEmptyNote( newNote ) );
+            dispatch( setActiveNote( newNote ) );
+
+            return;
+        }
 
         const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${ note.id }` );
+        
         //Con el objeto merge: true indicamos que consever los campos ya existentes, haga una unión 
         await setDoc( docRef, noteToFireStore, { merge: true });
 
@@ -79,7 +81,7 @@ export const startDeletingNote = () => {
         const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${ note.id }`);
         await deleteDoc( docRef );
 
-        dispatch( deleteNoteById(note.id) );
+        dispatch( deleteNoteById(note) );
 
     }
 }
